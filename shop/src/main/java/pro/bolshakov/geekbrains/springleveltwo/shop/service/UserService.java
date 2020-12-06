@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
     boolean save(UserDto userDto);
+    void save(User user);
     List<UserDto> getAll();
 
     User findByName(String name);
