@@ -5,7 +5,7 @@
     <title>User</title>
 </head>
 <body>
-
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
 <h1>User form</h1>
 <form th:action="@{/users/new}" th:object="${user}" method="post">
     <table border="1">
@@ -23,7 +23,7 @@
             <td><input type="password" th:field="*{matchingPassword}"></td>
         </tr>
         <tr>
-            <td>Matching password</td>
+            <td>Email</td>
             <td><input type="email" th:field="*{email}"></td>
         </tr>
 

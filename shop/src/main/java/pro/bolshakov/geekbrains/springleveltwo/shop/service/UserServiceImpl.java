@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,6 +26,13 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public List<UserDto> getAll() {
+        return userRepository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -57,5 +65,12 @@ public class UserServiceImpl implements UserService {
                 user.getName(),
                 user.getPassword(),
                 roles);
+    }
+
+    private UserDto toDto(User user){
+        return UserDto.builder()
+                .username(user.getName())
+                .email(user.getEmail())
+                .build();
     }
 }
