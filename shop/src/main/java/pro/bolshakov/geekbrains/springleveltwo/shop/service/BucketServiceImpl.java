@@ -6,10 +6,14 @@ import pro.bolshakov.geekbrains.springleveltwo.shop.dao.ProductRepository;
 import pro.bolshakov.geekbrains.springleveltwo.shop.domain.Bucket;
 import pro.bolshakov.geekbrains.springleveltwo.shop.domain.Product;
 import pro.bolshakov.geekbrains.springleveltwo.shop.domain.User;
+import pro.bolshakov.geekbrains.springleveltwo.shop.dto.BucketDetailDto;
+import pro.bolshakov.geekbrains.springleveltwo.shop.dto.BucketDto;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,10 +21,12 @@ public class BucketServiceImpl implements BucketService {
 
     private final BucketRepository bucketRepository;
     private final ProductRepository productRepository;
+    private final UserService userService;
 
-    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository) {
+    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService) {
         this.bucketRepository = bucketRepository;
         this.productRepository = productRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -47,5 +53,33 @@ public class BucketServiceImpl implements BucketService {
         newProductsList.addAll(getCollectRefProductsByIds(productIds));
         bucket.setProducts(newProductsList);
         bucketRepository.save(bucket);
+    }
+
+    @Override
+    public BucketDto getBucketByUser(String name) {
+        User user = userService.findByName(name);
+        if(user == null || user.getBucket() == null){
+            return new BucketDto();
+        }
+
+        BucketDto bucketDto = new BucketDto();
+        Map<Long, BucketDetailDto> mapByProductId = new HashMap<>();
+
+        List<Product> products = user.getBucket().getProducts();
+        for (Product product : products) {
+            BucketDetailDto detail = mapByProductId.get(product.getId());
+            if(detail == null){
+                mapByProductId.put(product.getId(), new BucketDetailDto(product));
+            }
+            else {
+                detail.setAmount(detail.getAmount() + 1.0);
+                detail.setSum(detail.getSum() + product.getPrice());
+            }
+        }
+
+        bucketDto.setBucketDetails(new ArrayList<>(mapByProductId.values()));
+        bucketDto.aggregate();
+
+        return bucketDto;
     }
 }
