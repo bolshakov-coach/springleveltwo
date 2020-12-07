@@ -5,6 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pro.bolshakov.geekbrains.springleveltwo.shop.service.SessionObjectHolder;
 
+import javax.servlet.http.HttpSession;
+import java.util.UUID;
+
 @Controller
 public class MainController {
 
@@ -15,8 +18,15 @@ public class MainController {
     }
 
     @RequestMapping({"","/"})
-    public String index(Model model){
+    public String index(Model model, HttpSession httpSession){
         model.addAttribute("amountClicks", sessionObjectHolder.getAmountClicks());
+        if(httpSession.getAttribute("myID") == null){
+            String uuid = UUID.randomUUID().toString();
+            httpSession.setAttribute("myID", uuid);
+            System.out.println("Generated UUID -> " + uuid);
+        }
+        model.addAttribute("uuid", httpSession.getAttribute("myID"));
+
         return "index";
     }
 
