@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pro.bolshakov.geekbrains.springleveltwo.shop.dto.ProductDto;
 import pro.bolshakov.geekbrains.springleveltwo.shop.service.ProductService;
+import pro.bolshakov.geekbrains.springleveltwo.shop.service.SessionObjectHolder;
 
 import java.security.Principal;
 import java.util.List;
@@ -16,13 +17,16 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final SessionObjectHolder sessionObjectHolder;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, SessionObjectHolder sessionObjectHolder) {
         this.productService = productService;
+        this.sessionObjectHolder = sessionObjectHolder;
     }
 
     @GetMapping
     public String list(Model model){
+        sessionObjectHolder.addClick();
         List<ProductDto> list = productService.getAll();
         model.addAttribute("products", list);
         return "products";
@@ -30,6 +34,7 @@ public class ProductController {
 
     @GetMapping("/{id}/bucket")
     public String addBucket(@PathVariable Long id, Principal principal){
+        sessionObjectHolder.addClick();
         if(principal == null){
             return "redirect:/products";
         }
