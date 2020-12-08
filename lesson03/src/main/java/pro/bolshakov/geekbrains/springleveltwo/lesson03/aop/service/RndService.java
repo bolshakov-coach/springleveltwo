@@ -7,6 +7,7 @@ import java.util.UUID;
 @Service
 public class RndService {
     public String getString(){
+        System.out.println("called RndService.getString");
         return UUID.randomUUID().toString();
     }
 }
