@@ -5,8 +5,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class LogAspect {
 
     @Pointcut("execution(* pro.bolshakov.geekbrains.springleveltwo.lesson03.aop.service..*.*(..))")
