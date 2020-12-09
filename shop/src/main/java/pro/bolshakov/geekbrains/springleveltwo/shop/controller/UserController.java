@@ -83,7 +83,7 @@ public class UserController {
                 && !dto.getPassword().isEmpty()
                 && !Objects.equals(dto.getPassword(), dto.getMatchingPassword())){
             model.addAttribute("user", dto);
-            return "/users/profile";
+            return "profile";
         }
 
         userService.updateProfile(dto);
