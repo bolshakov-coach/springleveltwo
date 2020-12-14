@@ -5,7 +5,6 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import pro.bolshakov.geekbrains.springleveltwo.shop.config.WebServiceConfig;
 import pro.bolshakov.geekbrains.springleveltwo.shop.service.GreetingService;
 import pro.bolshakov.geekbrains.springleveltwo.shop.ws.greeting.GetGreetingRequest;
 import pro.bolshakov.geekbrains.springleveltwo.shop.ws.greeting.GetGreetingResponse;
@@ -15,6 +14,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 @Endpoint
 public class GreetingEndpoint {
 
+    public static final String NAMESPACE_URL = "http://bolshakov.pro/geekbrains/springleveltwo/shop/ws/greeting";
+
     private GreetingService greetingService;
 
     @Autowired
@@ -22,7 +23,7 @@ public class GreetingEndpoint {
         this.greetingService = greetingService;
     }
 
-    @PayloadRoot(namespace = WebServiceConfig.NAMESPACE_GREETING, localPart = "getGreetingRequest")
+    @PayloadRoot(namespace = NAMESPACE_URL, localPart = "getGreetingRequest")
     @ResponsePayload
     public GetGreetingResponse getGreeting(@RequestPayload GetGreetingRequest request)
             throws DatatypeConfigurationException {
