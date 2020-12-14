@@ -6,7 +6,7 @@ spring:
       server:
         git:
           uri: https://github.com/bolshakov-coach/springcloud-config.git
-          search-paths: springleveltwo/lesson05/step01
+          search-paths: springleveltwo/lesson05/step02
           clone-on-start: true
   application:
     name: config_server

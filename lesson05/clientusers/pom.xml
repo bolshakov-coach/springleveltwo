@@ -11,7 +11,7 @@
     <groupId>pro.bolshakov.geekbrains.springleveltwo</groupId>
     <artifactId>lesson05</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SpringConfigCloudClientNews</name>
+    <name>SpringConfigCloudClientUsers</name>
     <description>Demo Spring cloud config client</description>
 
     <properties>

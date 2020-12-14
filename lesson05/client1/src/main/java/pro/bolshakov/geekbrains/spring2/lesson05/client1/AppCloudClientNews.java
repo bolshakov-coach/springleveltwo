@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppClient1 {
+public class AppCloudClientNews {
     public static void main(String[] args) {
-        SpringApplication.run(AppClient1.class, args);
+        SpringApplication.run(AppCloudClientNews.class, args);
     }
 }
