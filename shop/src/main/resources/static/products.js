@@ -16,7 +16,7 @@ function connect() {
     });
 }
 
-/*// хук на интерфейс
+// хук на интерфейс
 $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
@@ -25,8 +25,11 @@ $(function () {
 });
 // отправка сообщения на сервер
 function sendContent() {
-    stomp.send("/app/item", {}, JSON.stringify({'content': $("#content").val()}));
-}*/
+    stomp.send("/app/products", {}, JSON.stringify({
+        'title': $("#title").val(),
+        'price': $("#price").val()
+    }));
+}
 
 // рендер сообщения, полученного от сервера
 function renderItem(productJson) {
