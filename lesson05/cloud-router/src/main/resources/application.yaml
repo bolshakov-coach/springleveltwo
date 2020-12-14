@@ -1,8 +1,6 @@
-zuul:
-  routes:
-    news:
-      path: /news/**
-      url: http://localhost:8081/
-    users:
-      path: /users/**
-      url: http://localhost:8082/
+spring:
+  application:
+    name: router-server
+  cloud:
+    config:
+      uri: http://localhost:8888
