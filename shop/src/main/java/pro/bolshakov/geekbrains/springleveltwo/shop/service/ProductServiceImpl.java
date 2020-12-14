@@ -1,8 +1,10 @@
 package pro.bolshakov.geekbrains.springleveltwo.shop.service;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pro.bolshakov.geekbrains.springleveltwo.shop.dao.ProductRepository;
 import pro.bolshakov.geekbrains.springleveltwo.shop.domain.Bucket;
+import pro.bolshakov.geekbrains.springleveltwo.shop.domain.Product;
 import pro.bolshakov.geekbrains.springleveltwo.shop.domain.User;
 import pro.bolshakov.geekbrains.springleveltwo.shop.dto.ProductDto;
 import pro.bolshakov.geekbrains.springleveltwo.shop.mapper.ProductMapper;
@@ -19,11 +21,16 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserService userService;
     private final BucketService bucketService;
+    private final SimpMessagingTemplate template;
 
-    public ProductServiceImpl(ProductRepository productRepository, UserService userService, BucketService bucketService) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              UserService userService,
+                              BucketService bucketService,
+                              SimpMessagingTemplate template) {
         this.productRepository = productRepository;
         this.userService = userService;
         this.bucketService = bucketService;
+        this.template = template;
     }
 
     @Override
@@ -48,5 +55,15 @@ public class ProductServiceImpl implements ProductService {
         else {
             bucketService.addProducts(bucket, Collections.singletonList(productId));
         }
+    }
+
+    @Override
+    @Transactional
+    public void addProduct(ProductDto dto) {
+        Product product = mapper.toProduct(dto);
+        Product savedProduct = productRepository.save(product);
+
+        template.convertAndSend("/topic/products",
+                ProductMapper.MAPPER.fromProduct(savedProduct));
     }
 }
