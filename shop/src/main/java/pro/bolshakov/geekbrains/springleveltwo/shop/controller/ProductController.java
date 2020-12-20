@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pro.bolshakov.geekbrains.springleveltwo.shop.dto.ProductDto;
 import pro.bolshakov.geekbrains.springleveltwo.shop.service.ProductService;
 import pro.bolshakov.geekbrains.springleveltwo.shop.service.SessionObjectHolder;
@@ -55,6 +52,12 @@ public class ProductController {
     @MessageMapping("/products")
     public void messageAddProduct(ProductDto dto){
         productService.addProduct(dto);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ProductDto getById(@PathVariable Long id){
+        return productService.getById(id);
     }
 
 }
