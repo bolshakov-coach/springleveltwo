@@ -3,6 +3,7 @@ package pro.bolshakov.geekbrains.springleveltwo.shop.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import pro.bolshakov.geekbrains.springleveltwo.shop.dto.BucketDto;
 import pro.bolshakov.geekbrains.springleveltwo.shop.service.BucketService;
 
@@ -28,6 +29,14 @@ public class BucketController {
         }
 
         return "bucket";
+    }
+
+    @PostMapping("/bucket")
+    public String commitBucket(Principal principal){
+        if(principal != null){
+            bucketService.commitBucketToOrder(principal.getName());
+        }
+        return "redirect:/bucket";
     }
 
 }
