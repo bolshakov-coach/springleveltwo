@@ -23,10 +23,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailSenderService mailSenderService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           MailSenderService mailSenderService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mailSenderService = mailSenderService;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class UserServiceImpl implements UserService {
                 .role(Role.CLIENT)
                 .activeCode(UUID.randomUUID().toString())
                 .build();
-        userRepository.save(user);
+        this.save(user);
         return true;
     }
 
@@ -81,8 +85,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void save(User user) {
         userRepository.save(user);
+        if(user.getActiveCode() != null && !user.getActiveCode().isEmpty()){
+            mailSenderService.sendActivateCode(user);
+        }
     }
 
     @Override

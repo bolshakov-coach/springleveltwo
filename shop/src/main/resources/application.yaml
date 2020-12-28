@@ -9,3 +9,12 @@ spring:
     password: password
   flyway:
     baseline-on-migrate: true
+server:
+  hostname: localhost
+  port: 8080
+mail:
+  server:
+    host: smtp.beget.com
+    port: 25
+    username: test@bolshakov.pro
+    password: ${hidden.email.password}
