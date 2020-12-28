@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .email(userDto.getEmail())
                 .role(Role.CLIENT)
-                .activeCode(UUID.randomUUID().toString())
+                .activateCode(UUID.randomUUID().toString())
                 .build();
         this.save(user);
         return true;
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void save(User user) {
         userRepository.save(user);
-        if(user.getActiveCode() != null && !user.getActiveCode().isEmpty()){
+        if(user.getActivateCode() != null && !user.getActivateCode().isEmpty()){
             mailSenderService.sendActivateCode(user);
         }
     }
@@ -115,12 +115,12 @@ public class UserServiceImpl implements UserService {
         if(activateCode == null || activateCode.isEmpty()){
             return false;
         }
-        User user = userRepository.findFirstByActiveCode(activateCode);
+        User user = userRepository.findFirstByActivateCode(activateCode);
         if(user == null){
             return false;
         }
 
-        user.setActiveCode(null);
+        user.setActivateCode(null);
         userRepository.save(user);
 
         return true;
@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder()
                 .username(user.getName())
                 .email(user.getEmail())
-                .activated(user.getActiveCode() == null)
+                .activated(user.getActivateCode() == null)
                 .build();
     }
 }

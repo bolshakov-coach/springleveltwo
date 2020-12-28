@@ -5,5 +5,5 @@ import pro.bolshakov.geekbrains.springleveltwo.shop.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findFirstByName(String name);
-    User findFirstByActiveCode(String activateCode);
+    User findFirstByActivateCode(String activateCode);
 }

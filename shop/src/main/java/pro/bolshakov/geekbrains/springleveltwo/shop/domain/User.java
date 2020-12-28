@@ -30,6 +30,6 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Bucket bucket;
     @Column(name = "activate_code")
-    private String activeCode;
+    private String activateCode;
 
 }

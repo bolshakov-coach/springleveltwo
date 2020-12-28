@@ -67,6 +67,7 @@ public class UserController {
         UserDto dto = UserDto.builder()
                 .username(user.getName())
                 .email(user.getEmail())
+                .activated(user.getActivateCode() == null)
                 .build();
         model.addAttribute("user", dto);
         return "profile";
