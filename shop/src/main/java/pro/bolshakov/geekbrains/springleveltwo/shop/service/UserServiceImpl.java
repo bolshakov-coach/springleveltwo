@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,10 +23,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailSenderService mailSenderService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           MailSenderService mailSenderService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mailSenderService = mailSenderService;
     }
 
     @Override
@@ -46,8 +51,9 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .email(userDto.getEmail())
                 .role(Role.CLIENT)
+                .activateCode(UUID.randomUUID().toString())
                 .build();
-        userRepository.save(user);
+        this.save(user);
         return true;
     }
 
@@ -79,8 +85,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void save(User user) {
         userRepository.save(user);
+        if(user.getActivateCode() != null && !user.getActivateCode().isEmpty()){
+            mailSenderService.sendActivateCode(user);
+        }
     }
 
     @Override
@@ -99,10 +109,28 @@ public class UserServiceImpl implements UserService {
                 roles);
     }
 
+    @Override
+    @Transactional
+    public boolean activateUser(String activateCode) {
+        if(activateCode == null || activateCode.isEmpty()){
+            return false;
+        }
+        User user = userRepository.findFirstByActivateCode(activateCode);
+        if(user == null){
+            return false;
+        }
+
+        user.setActivateCode(null);
+        userRepository.save(user);
+
+        return true;
+    }
+
     private UserDto toDto(User user){
         return UserDto.builder()
                 .username(user.getName())
                 .email(user.getEmail())
+                .activated(user.getActivateCode() == null)
                 .build();
     }
 }

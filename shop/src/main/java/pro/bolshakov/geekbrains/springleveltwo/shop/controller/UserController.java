@@ -67,6 +67,7 @@ public class UserController {
         UserDto dto = UserDto.builder()
                 .username(user.getName())
                 .email(user.getEmail())
+                .activated(user.getActivateCode() == null)
                 .build();
         model.addAttribute("user", dto);
         return "profile";
@@ -88,6 +89,13 @@ public class UserController {
 
         userService.updateProfile(dto);
         return "redirect:/users/profile";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activateUser(Model model,@PathVariable("code") String activateCode){
+        boolean activated = userService.activateUser(activateCode);
+        model.addAttribute("activated", activated);
+        return "activate-user";
     }
 
 }
