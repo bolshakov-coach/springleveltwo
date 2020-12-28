@@ -90,4 +90,11 @@ public class UserController {
         return "redirect:/users/profile";
     }
 
+    @GetMapping("/activate/{code}")
+    public String activateUser(Model model,@PathVariable("code") String activateCode){
+        boolean activated = userService.activateUser(activateCode);
+        model.addAttribute("activated", activated);
+        return "activate-user";
+    }
+
 }
